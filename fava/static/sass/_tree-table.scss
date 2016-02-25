@@ -54,4 +54,13 @@ table.tree-table {
 
        &.not-fully-expanded { display: inline; }
     }
+
+    span.budget {
+        // TODO this would look much nicer, but does not work
+        // float: left;
+        // margin-left: -10px;
+
+        &.budget-negative { color: $color_budget_negative; }
+        &.budget-positive { color: $color_budget_positive; }
+    }
 }

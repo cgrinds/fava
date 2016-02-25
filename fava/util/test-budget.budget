@@ -1,0 +1,14 @@
+Expenses:Foo
+    2016-W01      70.00 USD
+    2016-W02     350.00 USD
+
+Expenses:Foo2
+    2016-W31     250.00 USD
+    2016-W30     111.00 EUR
+    2016-W20    9999.15 USD
+
+Expenses:Food:Groceries
+    2013-W52       1.00 USD
+    2016-W01       1.00 USD
+    2016-W02       1.00 USD
+    2016-W06       5.00 USD

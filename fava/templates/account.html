@@ -85,14 +85,23 @@
                     </td>
 
                     {% for entry in row|reverse %}
+                        {% set outer_loop = loop %}
                         <td class="num">
                             {% if entry.balances|length > 0 %}
                                 <span class="balance">
-                                {% for currency, number in entry.balances.items() %}
-                                    {% if number %}
-                                        {{ number|format_currency }} {{ currency }}<br>
-                                    {% endif %}
-                                {% endfor %}
+                                    {% for currency, number in entry.balances.items() %}
+                                        {% if number %}
+                                            {% set date_start = dates[-outer_loop.index0][0] %}  {# TODO fails for the the left-most column #}
+                                            {% set date_end = dates[-outer_loop.index0][1] %}    {# TODO fails for the the left-most column #}
+                                            {% set budget = budgets.budget(row[0].account, currency, date_start, date_end) %}
+                                            {% if budget %}
+                                                {% set budget = budget - number %}
+                                                <span class="budget budget-{% if budget > 0 %}positive{% else %}negative{% endif %}">({{ budget | format_currency }})</span>
+                                            {% endif %}
+                                            {{ number|format_currency }} {{ currency }}
+                                            <br>
+                                        {% endif %}
+                                    {% endfor %}
                                 </span>
                             {% endif %}
                             {% if entry.balances_children|length > 0 %}
