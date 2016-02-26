@@ -1,5 +1,5 @@
 Expenses:Foo
-    2016-W01      70.00 USD
+    2016-W08      70.00 USD
     2016-W02     350.00 USD
 
 Expenses:Foo2
@@ -9,18 +9,23 @@ Expenses:Foo2
 
 Expenses:Food:Groceries
     2013-W52       1.00 USD
-    2016-W01       1.00 USD
+    2016-W09       1.00 USD
     2016-W02       1.00 USD
     2016-W06       5.00 USD
 
 Expenses:Food:Alcohol
     2013-W52       100.00 USD
-    2016-W01       200.00 USD
+    2016-W41       200.00 USD
     2016-W02       100.00 USD
     2016-W06       500.00 USD
 
 Expenses:Food
     2013-W52       1.00 USD
-    2016-W01       2.00 USD
-    2016-W02       3.00 USD
-    2016-W06       4.00 USD
+    2014-W01       2.00 USD
+    2014-W02       3.00 USD
+    2014-W06       4.00 USD
+    2015-01-07     1.00 USD
+    2015-W02       2.00 USD
+    2015-03        3.00 USD
+    2015-Q4        4.00 USD
+    2016           5.00 USD
