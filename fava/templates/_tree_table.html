@@ -24,9 +24,19 @@
             {% for currency in operating_currencies %}
                 <td class="num">
                 {% if currency in row.balances %}
+                    {% set budget = row.budgets[currency] %}
+                    {% if budget %}
+                        {% set budget = budget - row.balances[currency] %}
+                        <span class="budget budget-{% if budget > 0 %}positive{% else %}negative{% endif %}">({{ budget | format_currency }})</span>
+                    {% endif %}
                     <span class="balance">{{ row.balances[currency]|format_currency }}</span>
                 {% endif %}
                 {% if currency in row.balances_children %}
+                    {% set budget = row.budgets[currency] %}
+                    {% if budget %}
+                        {% set budget = budget - row.balances_children[currency] %}
+                        <span class="budget budget-{% if budget > 0 %}positive{% else %}negative{% endif %}">({{ budget | format_currency }})</span>
+                    {% endif %}
                     <span class="tree-balance">{{ row.balances_children[currency]|format_currency }}</span>
                 {% endif %}
                 </td>

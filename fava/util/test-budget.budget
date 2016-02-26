@@ -12,3 +12,9 @@ Expenses:Food:Groceries
     2016-W01       1.00 USD
     2016-W02       1.00 USD
     2016-W06       5.00 USD
+
+Expenses:Food:Alcohol
+    2013-W52       100.00 USD
+    2016-W01       200.00 USD
+    2016-W02       100.00 USD
+    2016-W06       500.00 USD

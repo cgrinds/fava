@@ -29,6 +29,7 @@ from beancount.core.realization import RealAccount
 from beancount.core.interpolate import compute_entries_balance
 from beancount.core.account import has_component
 from beancount.core.account_types import get_account_sign
+from beancount.core.amount import decimal
 from beancount.core.data import (get_entry, iter_entry_dates, posting_sortkey,
                                  Open, Close, Note, Document, Balance,
                                  Transaction, Event, Query)
@@ -158,6 +159,7 @@ class BeancountReportAPI(object):
             'account': ra.account,
             'balances_children': serialize_inventory(realization.compute_balance(ra), at_cost=True),
             'balances': serialize_inventory(ra.balance, at_cost=True),
+            'budgets': {},
             'is_leaf': len(ra) == 0 or bool(ra.txn_postings),
             'postings_count': len(ra.txn_postings)
         } for ra in realization.iter_children(real_account)]
@@ -264,14 +266,36 @@ class BeancountReportAPI(object):
                   'balances': {
                       'USD': 123.45, ...
                   },
+                  'budgets': {
+                      'USD': 123.45, ...
+                  }
                   'is_leaf': True,
                   'postings_count': 3
               }, ...
           ]
         """
         real_account = self._real_account(account_name, self.entries, begin_date, end_date, min_accounts)
+        tree_table = self._table_tree(real_account)
 
-        return self._table_tree(real_account)
+        if not begin_date or not end_date:
+            if self.filters['time']:
+                try:
+                    begin_date, end_date = parse_date(self.filters['time'])
+                except TypeError:
+                    raise FilterException('Failed to parse date string: {}'.format(self.filters['time']))
+
+        # inject budgets
+        if begin_date and end_date:
+            for account in tree_table:
+                if len(account['balances_children']):
+                    currencies = account['balances_children'].keys()
+                else:
+                    currencies = account['balances'].keys()
+
+                for currency in currencies:
+                    account['budgets'][currency] =  self._budget_for_account(account['account'], currency, begin_date, end_date)
+
+        return tree_table
 
     def closing_balances(self, account_name):
         closing_entries = summarize.cap_opt(self.entries, self.options)
@@ -618,3 +642,15 @@ class BeancountReportAPI(object):
             if isinstance(posting, Open):
                 return posting.meta
         return {}
+
+
+    from .budgets_separate_file import AllExpr, Budgets
+
+    budget_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', 'util', 'test-budget.budget')
+    parser = AllExpr.parser()
+    with open(budget_file, 'r') as f:
+        result = parser.parse_text(f.read(), eof=True)
+    budgets = Budgets(accounts=result.value())
+
+    def _budget_for_account(self, account_name, currency_name, date_start, date_end):
+        return self.budgets.budget(account_name, currency_name, date_start, date_end)

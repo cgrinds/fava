@@ -28,14 +28,6 @@ app.secret_key = '1234'
 
 app.api = BeancountReportAPI()
 
-from .util.budgets import AllExpr, Budgets
-
-budget_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'util', 'test-budget.budget')
-parser = AllExpr.parser()
-with open(budget_file, 'r') as f:
-    result = parser.parse_text(f.read(), eof=True)
-budgets = Budgets(accounts=result.value())
-
 defaults_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                              'default-settings.conf')
 
@@ -342,7 +334,6 @@ def template_context():
                 config_file=app.config_file,
                 config_file_defaults=app.config.user['file_defaults'],
                 operating_currencies=app.api.options['operating_currency'],
-                budgets=budgets,
                 today=datetime.now().strftime('%Y-%m-%d'))
 
 
