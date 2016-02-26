@@ -644,13 +644,8 @@ class BeancountReportAPI(object):
         return {}
 
 
-    from .budgets_separate_file import AllExpr, Budgets
-
-    budget_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', 'util', 'test-budget.budget')
-    parser = AllExpr.parser()
-    with open(budget_file, 'r') as f:
-        result = parser.parse_text(f.read(), eof=True)
-    budgets = Budgets(accounts=result.value())
+    from .budgets.budgets_separate_file import Budgets
+    budgets = Budgets()
 
     def _budget_for_account(self, account_name, currency_name, date_start, date_end):
         return self.budgets.budget(account_name, currency_name, date_start, date_end)

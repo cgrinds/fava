@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-
+import os
 import sys
 from datetime import datetime, timedelta
 
@@ -7,16 +7,19 @@ from modgrammar import *
 
 from beancount.core.amount import Amount, decimal
 
-def daterange(start_date, end_date):
-    for n in range(int ((end_date - start_date).days)):
-        yield start_date + timedelta(n)
-
-
 class Budgets(object):
 
-    def __init__(self, accounts):
-        super(Budgets, self).__init__()
-        self.accounts = accounts
+    def __init__(self):
+        budget_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'test-budget.budget')
+        parser = AllExpr.parser()
+        with open(budget_file, 'r') as f:
+            result = parser.parse_text(f.read(), eof=True)
+
+        self.accounts = result.value()
+
+    def _daterange(self, start_date, end_date):
+        for n in range(int ((end_date - start_date).days)):
+            yield start_date + timedelta(n)
 
     def budget(self, account_name, currency_name, date_from, date_to):
         # find account
@@ -46,7 +49,7 @@ class Budgets(object):
             return None
 
         budget = 0
-        for single_day in daterange(date_from, date_to):
+        for single_day in self._daterange(date_from, date_to):
             matching_dateline = self._matching_dateline(datelines, single_day)
             budget = budget + (matching_dateline.value / matching_dateline.days)
 
