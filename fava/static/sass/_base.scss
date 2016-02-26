@@ -490,7 +490,6 @@ article {
 
                     &.num {
                         color: $color_text;
-                        padding-left: 14px;
                         font: 1.1em / 1.1em $font_family_monospaced;
                         text-align: right;
                         padding-right: 6px !important;
@@ -498,6 +497,19 @@ article {
 
                         span.balance { display: block; }
                         span.tree-balance { display: none; }
+
+                        span.balance,
+                        span.tree-balance
+                        {
+                            @include clearfix;
+                            clear: both;
+
+                            span.number {
+                                display: block;
+                                float: right;
+                                padding-left: 14px;
+                            }
+                        }
                     }
 
                     &.account-level-1 { padding-left: 8px; }
